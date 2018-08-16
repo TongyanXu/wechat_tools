@@ -1,0 +1,8 @@
+cache
+log
+.log
+.pkl
+.idea
+__pycache__
+*.pyc
+venv
