@@ -37,7 +37,7 @@ class WechatLogger(object):
         return _stream_handler
 
     def _gen_file_handler(self):
-        _stream_handler = FileHandler(self._path.log_path)
+        _stream_handler = FileHandler(self._path.log_path.format(self._name))
         _stream_handler.setLevel(self._level)
         _stream_handler.setFormatter(self._default_formatter)
         return _stream_handler

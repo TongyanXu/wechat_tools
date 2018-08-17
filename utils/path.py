@@ -21,7 +21,7 @@ class WechatPathManager(object):
 
     _cache_file = 'wxpy.pkl'
     _puid_file = 'wxpy_puid.pkl'
-    _log_file = 'wechat_component_log_{}.log'.format(time.strftime('%Y%m%d_%H%M%S'))
+    _log_file = '{}' + '_log_{}.log'.format(time.strftime('%Y%m%d_%H%M%S'))
     _cache_info_file = 'cache_info.json'
 
     _supported_sticker_type = ['.jpg', '.jpeg', '.png', '.gif']
