@@ -6,11 +6,11 @@ By modifying configs, wechat components may perform differently
 To see detailed info of each component, please check components repository
 """
 __author__ = 'Tongyan Xu'
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 from wxpy import Bot, embed
 from constants import WechatComponentType, WechatDefaultConfig
-from utils.path_utils import WechatPathManager
+from utils.path import WechatPathManager
 from components import WechatComponents
 
 
@@ -70,5 +70,5 @@ if __name__ == '__main__':
             enable=False,
             friend_enable=True,
             group_enable=False,
-            friend_filter=['whatever friends here'],
+            friend_filter=['may'],
             group_filter=['whatever groups here']))

@@ -24,6 +24,7 @@ class WechatRecallBlocker(WechatComponents):
             """
             Message attachment cache maker
             To cache all recordings, pictures, videos, and attachments in all other types
+            Since auto cache is not reliable enough under recalling situations
             All cache files will be save at cache/temp
             Videos and attachments are not considered to send whole files while replying
             """
@@ -41,7 +42,7 @@ class WechatRecallBlocker(WechatComponents):
             msg, recall_time = self._get_recall_msg(note_=note)
             if msg:
                 self._backup_msg(msg, recall_time)
-                if chat_type_.is_enabled():
+                if chat_type_.is_enabled:
                     if chat_type_.is_all or msg.sender.nick_name in chat_type_.filter:
                         if self._config['sticker']['send_sticker']:
                             self._reply_sticker(msg_=msg,

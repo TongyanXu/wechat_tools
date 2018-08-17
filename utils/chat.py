@@ -21,7 +21,6 @@ class WechatChatManager(object):
         self._enabled = enabled_
         self._original_filter = original_filter_
         self._apply_filter()
-        self._all = False
 
     @property
     def is_enabled(self):
@@ -52,14 +51,15 @@ class WechatChatManager(object):
 
     def _apply_filter(self):
         self._process_filter()
-        if self._enabled and self._filter:
+        self._all = True if (not self._filter and not self._fail_filter) else False
+        if self._enabled and self._filter and not self._all:
             self._logger.info('{:6} chats are registered with filter: {}'.format(self._name, self._filter))
-        elif self._enabled and not self._filter:
+        elif self._enabled and self._all:
             self._logger.warning('{:6} chats are registered without filter.'.format(self._name))
         else:
             self._logger.info('{:6} chats are disabled.'.format(self._name))
         if self._fail_filter:
-            self._logger.warning('FAILED to recognize following users in filter: {}'.format(self._fail_filter))
+            self._logger.error('FAILED to recognize following users in filter: {}'.format(self._fail_filter))
 
     def _process_filter(self):
         self._filter_temp = list(map(self._search_nick_name, self._original_filter))
@@ -74,7 +74,6 @@ class WechatChatManager(object):
             else:
                 _index = self._filter_temp.index(_element)
                 self._fail_filter.append(self._original_filter[_index])
-        self._all = True if not self._filter and not self._fail_filter else False
 
     def _search_nick_name(self, key_word_=None):
         _user = self._bot.search(keywords=key_word_)
