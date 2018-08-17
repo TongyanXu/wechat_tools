@@ -27,5 +27,6 @@ class WechatAutoRepeater(WechatComponents):
                 if msg.type in [WechatMsgType.PICTURE] and msg.raw.get('HasProductId'):
                     msg.reply_msg(r'这表情我没下')
                     self._logger.warning(r'无法复读 {} 的信息，系微信官方表情'.format(self._gen_log_sender(msg)))
-                msg.forward(msg.sender)
-                self._logger.info(r'已自动复读 {} 的信息'.format(self._gen_log_sender(msg)))
+                else:
+                    msg.forward(msg.sender)
+                    self._logger.info(r'已自动复读 {} 的信息'.format(self._gen_log_sender(msg)))

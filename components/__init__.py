@@ -68,8 +68,8 @@ class WechatComponents(object):
 
     def _gen_log_sender(self, msg_):
         _sender = '群聊 {} 中 {}'.format(msg_.sender.nick_name, msg_.member.nick_name) if \
-            isinstance(msg_.sender, self._friend.type) else '{}'.format(msg_.sender.nick_name) if \
-            isinstance(msg_.sender, self._group.type) else '未知'
+            isinstance(msg_.sender, self._group.type) else '{}'.format(msg_.sender.nick_name) if \
+            isinstance(msg_.sender, self._friend.type) else '未知'
         return _sender
 
     def _load_config(self):
