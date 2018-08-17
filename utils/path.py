@@ -58,15 +58,13 @@ class WechatPathManager(object):
         """Get puid cache path for Bot"""
         return self._puid_file_path
 
-    def get_sticker_path(self, sticker_name_=None, random_sticker_=True):
+    def get_sticker_path(self, sticker_name_=None):
         """Get sticker path for recall-blocker"""
+        if not self._sticker_list:
+            return None
         if not sticker_name_:
-            if random_sticker_:
-                index = random.randint(0, len(self._sticker_list) - 1)
-                sticker_name_ = self._sticker_list[index]
-            else:
-                if self._sticker_list:
-                    sticker_name_ = self._sticker_list[0]
+            index = random.randint(0, len(self._sticker_list) - 1)
+            sticker_name_ = self._sticker_list[index]
         return os.path.join(self._static_dir, sticker_name_) if sticker_name_ else None
 
     def gen_msg_cache_path(self, msg_):

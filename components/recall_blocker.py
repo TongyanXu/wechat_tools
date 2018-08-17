@@ -45,9 +45,7 @@ class WechatRecallBlocker(WechatComponents):
                 if chat_type_.is_enabled:
                     if chat_type_.is_all or msg.sender.nick_name in chat_type_.filter:
                         if self._config['sticker']['send_sticker']:
-                            self._reply_sticker(msg_=msg,
-                                                sticker_name_=self._config['sticker']['sticker_name'],
-                                                random_sticker_=self._config['sticker']['random_sticker'])
+                            self._reply_sticker(msg_=msg, sticker_name_=self._config['sticker']['sticker_name'])
                         self._send_msg(msg_=msg)
 
     def _get_msg_by_id(self, msg_id_=None):
@@ -72,9 +70,10 @@ class WechatRecallBlocker(WechatComponents):
         self._send_msg(msg_=msg_, prefix_=prefix, send_to_=self._bot.file_helper)
         self._logger.info(prefix[:-2])
 
-    def _reply_sticker(self, msg_, sticker_name_=None, random_sticker_=True):
-        sticker_path = self._path.get_sticker_path(sticker_name_=sticker_name_, random_sticker_=random_sticker_)
-        msg_.reply_image(path=sticker_path)
+    def _reply_sticker(self, msg_, sticker_name_=None):
+        sticker_path = self._path.get_sticker_path(sticker_name_=sticker_name_)
+        if sticker_path:
+            msg_.reply_image(path=sticker_path)
 
     def _send_msg(self, msg_, prefix_=None, send_to_=None):
         if not send_to_:

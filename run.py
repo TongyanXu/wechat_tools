@@ -6,7 +6,7 @@ By modifying configs, wechat components may perform differently
 To see detailed info of each component, please check components repository
 """
 __author__ = 'Tongyan Xu'
-__version__ = '1.0.4'
+__version__ = '1.0.5'
 
 from wxpy import Bot, embed
 from constants import WechatComponentType, WechatDefaultConfig
@@ -70,8 +70,7 @@ if __name__ == '__main__':
             group_filter=['whatever groups here'],
             sticker=dict(
                 send_sticker=True,
-                sticker_name=None,
-                random_sticker=True)),
+                sticker_name=None)),
         auto_replier_config=dict(
             enable=False,
             friend_enable=True,
