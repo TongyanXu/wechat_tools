@@ -24,5 +24,8 @@ class WechatAutoRepeater(WechatComponents):
             Controlled by config
             """
             if chat_type_.is_all or msg.sender.nick_name in chat_type_.filter:
+                if msg.type in [WechatMsgType.PICTURE] and msg.raw.get('HasProductId'):
+                    msg.reply_msg(r'这表情我没下')
+                    self._logger.warning(r'无法复读 {} 的信息，系微信官方表情'.format(msg.sender.nick_name))
                 msg.forward(msg.sender)
                 self._logger.info(r'已自动复读 {} 的信息'.format(msg.sender.nick_name))

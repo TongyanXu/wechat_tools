@@ -34,12 +34,9 @@ class WechatAutoReplier(WechatComponents):
             Controlled by config
             """
             if chat_type_.is_all or msg.sender.nick_name in chat_type_.filter:
-                if msg.type in WechatMsgType.TEXT:
-                    self._auto_reply(msg_=msg,
-                                     tuling_=self._config['auto_replier']['tuling'],
-                                     xiaoi_=self._config['auto_replier']['xiaoi'])
-                else:
-                    msg.forward(msg.sender)
+                self._auto_reply(msg_=msg,
+                                 tuling_=self._config['auto_replier']['tuling'],
+                                 xiaoi_=self._config['auto_replier']['xiaoi'])
 
     def _auto_reply(self, msg_, tuling_=False, xiaoi_=False):
         msg_reply = None
