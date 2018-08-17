@@ -53,11 +53,7 @@ class WechatAutoReplier(WechatComponents):
         self._log(msg_=msg_, msg_reply_=msg_reply)
 
     def _log(self, msg_, msg_reply_):
-        if isinstance(msg_.sender, self._friend.type):
-            self._logger.info(
-                r'收到群聊 {} 中 {} 的信息：{}'.format(msg_.sender.nick_name, msg_.member.nick_name, msg_.text))
-        elif isinstance(msg_.sender, self._group.type):
-            self._logger.info(r'收到 {} 的信息：{}'.format(msg_.sender.nick_name, msg_.text))
+        self._logger.info(r'收到 {} 的信息：{}'.format(self._gen_log_sender(msg_), msg_.text))
         self._logger.info(r'自动回复内容：'.format(msg_reply_))
 
     @staticmethod

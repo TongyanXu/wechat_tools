@@ -67,15 +67,8 @@ class WechatRecallBlocker(WechatComponents):
         return None, None
 
     def _backup_msg(self, msg_, recall_time_):
-        if isinstance(msg_.sender, self._friend.type):
-            prefix = r'{} 于 {} 撤回了 {} 消息: '.format(
-                msg_.sender.nick_name, recall_time_.strftime(self._default_time_format), msg_.type)
-        elif isinstance(msg_.sender, self._group.type):
-            prefix = r'{} 于 {} 在群聊 {} 撤回了 {} 消息: '.format(
-                msg_.member.nick_name, recall_time_.strftime(self._default_time_format), msg_.sender.nick_name,
-                msg_.type)
-        else:
-            prefix = str(msg_)
+        prefix = r'{} 于 {} 撤回了 {} 消息: '.format(
+            self._gen_log_sender(msg_), recall_time_.strftime(self._default_time_format), msg_.type)
         self._send_msg(msg_=msg_, prefix_=prefix, send_to_=self._bot.file_helper)
         self._logger.info(prefix[:-2])
 
