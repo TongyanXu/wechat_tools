@@ -6,7 +6,7 @@ By modifying configs, wechat components may perform differently
 To see detailed info of each component, please check components repository
 """
 __author__ = 'Tongyan Xu'
-__version__ = '1.0.8'
+__version__ = '1.0.9'
 
 from wxpy import Bot, embed
 from constants import WechatComponentType, WechatDefaultConfig
@@ -60,6 +60,9 @@ if __name__ == '__main__':
     
     WARNING: Auto-replier and auto-repeater cannot be enabled simultaneously
              Or auto-repeater will be disabled on all TEXT messages
+    
+    WARNING: Tuling is preferred in auto-replier
+             If both Tuling and XiaoI are enabled, XiaoI will be automatically ignored
     """
     run_wechat_utils(
         recall_blocker_config=dict(
