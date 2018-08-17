@@ -81,7 +81,7 @@ class WechatPathManager(object):
 
     def get_msg_cache_path(self, msg_id_):
         """Get message attachment cache path and register to cache info"""
-        return self._cache_info[msg_id_]
+        return self._cache_info.get(msg_id_)
 
     @staticmethod
     def _check_and_create(path_):

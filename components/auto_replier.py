@@ -25,8 +25,7 @@ class WechatAutoReplier(WechatComponents):
         self._xiaoi = XiaoI(key=self._xiaoi_key, secret=self._xiaoi_secret)
 
     def _register_auto_func(self, chat_type_=None):
-        @self._bot.register(chats=chat_type_.type, enabled=chat_type_.is_enabled,
-                            msg_types=WechatMsgType.NORMAL_MSG)
+        @self._bot.register(chats=chat_type_.type, enabled=chat_type_.is_enabled, msg_types=WechatMsgType.REPLY_MSG)
         def auto_reply(msg):
             """
             Auto reply

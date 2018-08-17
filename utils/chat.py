@@ -51,8 +51,9 @@ class WechatChatManager(object):
 
     def _apply_filter(self):
         self._process_filter()
-        self._all = True if (not self._filter and not self._fail_filter) else False
-        if self._enabled and self._filter and not self._all:
+        self._enabled = False if not self._filter and self._fail_filter else self._enabled
+        self._all = True if not self._filter and self._enabled else False
+        if self._enabled and not self._all:
             self._logger.info('{:6} chats are registered with filter: {}'.format(self._name, self._filter))
         elif self._enabled and self._all:
             self._logger.warning('{:6} chats are registered without filter.'.format(self._name))

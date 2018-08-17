@@ -19,7 +19,7 @@ class WechatRecallBlocker(WechatComponents):
         super(WechatRecallBlocker, self).__init__(bot_=bot_, path_=path_, config_=config_, logger_=logger_)
 
     def _register_auto_func(self, chat_type_=None):
-        @self._bot.register(chats=chat_type_.type, enabled=True, msg_types=WechatMsgType.ATTACH_MSG)
+        @self._bot.register(chats=chat_type_.type, enabled=True, msg_types=WechatMsgType.LARGE_MSG)
         def msg_backup(msg):
             """
             Message attachment cache maker
@@ -87,23 +87,18 @@ class WechatRecallBlocker(WechatComponents):
         if not send_to_:
             send_to_ = msg_.sender
 
-        if msg_.type in [WechatMsgType.CARD] + WechatMsgType.ATTACH_MSG:
-            send_to_.send_msg(msg=self._get_name_prefix(msg_=msg_) + self._get_prefix(
-                msg_=msg_) if not prefix_ else prefix_)
-
-            if msg_.type in [WechatMsgType.PICTURE]:
-                send_to_.send_image(path=self._path.get_msg_cache_path(msg_.id))
-
-            # elif msg.type in [WechatMsgType.VIDEO]:
-            #     send_to.send_video(path=self._path.msg_cache_path(msg.id))
-            #
-            # elif msg.type in WechatMsgType.ATTACH_MSG:
-            #     send_to.send_file(path=self._path.msg_cache_path(msg.id))
+        if msg_.type in WechatMsgType.SPECIAL_MSG:
+            if msg_.type in [WechatMsgType.PICTURE] and not msg_.raw.get('HasProductId'):
+                return self._forward_msg(msg_=msg_, prefix_=prefix_, send_to_=send_to_)
+            send_to_.send_msg(
+                msg=self._get_name_prefix(msg_=msg_) + self._get_prefix(msg_=msg_) if not prefix_ else prefix_)
 
         else:
-            msg_.forward(send_to_,
-                         prefix=self._get_name_prefix(msg_=msg_) + self._get_prefix(
-                             msg_=msg_) if not prefix_ else prefix_)
+            self._forward_msg(msg_=msg_, prefix_=prefix_, send_to_=send_to_)
+
+    def _forward_msg(self, msg_, prefix_=None, send_to_=None):
+        msg_.forward(
+            send_to_, prefix=self._get_name_prefix(msg_=msg_) + self._get_prefix(msg_=msg_) if not prefix_ else prefix_)
 
     def _get_prefix(self, msg_):
         if msg_.type == WechatMsgType.TEXT:
@@ -145,13 +140,13 @@ class WechatRecallBlocker(WechatComponents):
         prefix = r'发了条{}秒的语音：'.format(int(round(msg_.voice_length / 1000)))
         return prefix
 
-    def _get_prefix_picture(self, msg_):
+    @staticmethod
+    def _get_prefix_picture(msg_):
         img_type = os.path.splitext(msg_.file_name)[1]
         prefix_1 = r'发了个图片：'
         prefix_2 = r'发了个表情：'
         prefix_3 = r'发了个微信商店里的俗表情'
-        return prefix_1 if img_type != '.gif' else \
-            prefix_2 if os.path.getsize(self._path.get_msg_cache_path(msg_id_=msg_.id)) else prefix_3
+        return prefix_1 if img_type != '.gif' else prefix_3 if msg_.raw.get('HasProductId') else prefix_2
 
     @staticmethod
     def _get_prefix_video(msg_):

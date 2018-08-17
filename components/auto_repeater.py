@@ -17,8 +17,7 @@ class WechatAutoRepeater(WechatComponents):
         super(WechatAutoRepeater, self).__init__(bot_=bot_, path_=path_, config_=config_, logger_=logger_)
 
     def _register_auto_func(self, chat_type_=None):
-        @self._bot.register(chats=chat_type_.type, enabled=chat_type_.is_enabled,
-                            msg_types=WechatMsgType.NORMAL_MSG)
+        @self._bot.register(chats=chat_type_.type, enabled=chat_type_.is_enabled, msg_types=WechatMsgType.REPEAT_MSG)
         def auto_repeat_friend(msg):
             """
             Auto repeat message
