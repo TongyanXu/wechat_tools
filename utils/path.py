@@ -63,8 +63,8 @@ class WechatPathManager(object):
         if not self._sticker_list:
             return None
         if not sticker_name_:
-            index = random.randint(0, len(self._sticker_list) - 1)
-            sticker_name_ = self._sticker_list[index]
+            _index = random.randint(0, len(self._sticker_list) - 1)
+            sticker_name_ = self._sticker_list[_index]
         return os.path.join(self._static_dir, sticker_name_) if sticker_name_ else None
 
     def gen_msg_cache_path(self, msg_):
@@ -83,21 +83,21 @@ class WechatPathManager(object):
 
     @staticmethod
     def _check_and_create(path_):
-        for p in path_:
-            if not os.path.exists(p):
-                os.mkdir(p)
+        for _p in path_:
+            if not os.path.exists(_p):
+                os.mkdir(_p)
 
     def _load_default_sticker(self):
-        for root, dirs, files in os.walk(self._static_dir):
-            for file in files:
-                if os.path.splitext(file)[1].lower() in self._supported_sticker_type:
-                    self._sticker_list.append(file)
+        for _root, _dirs, _files in os.walk(self._static_dir):
+            for _file in _files:
+                if os.path.splitext(_file)[1].lower() in self._supported_sticker_type:
+                    self._sticker_list.append(_file)
 
     def _load_cache_info(self):
         if os.path.exists(self._cache_info_path):
-            with open(self._cache_info_path) as f:
-                self._cache_info = json.loads(f.read())
+            with open(self._cache_info_path) as _f:
+                self._cache_info = json.loads(_f.read())
 
     def _save_cache_info(self):
-        with open(self._cache_info_path, 'w') as f:
-            f.write(json.dumps(self._cache_info))
+        with open(self._cache_info_path, 'w') as _f:
+            _f.write(json.dumps(self._cache_info))

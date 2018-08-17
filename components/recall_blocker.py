@@ -50,30 +50,30 @@ class WechatRecallBlocker(WechatComponents):
 
     def _get_msg_by_id(self, msg_id_=None):
         if msg_id_:
-            msg_list = self._bot.messages.search(id=msg_id_)
-            if msg_list:
-                msg = msg_list[0]
-                return msg
+            _msg_list = self._bot.messages.search(id=msg_id_)
+            if _msg_list:
+                _msg = _msg_list[0]
+                return _msg
         return None
 
     def _get_recall_msg(self, note_=None):
         if note_ and re.search(r'<!\[CDATA\[.*撤回了一条消息\]\]>', note_.raw.get('Content')) \
                 and re.search(r'<!\[CDATA\[(.*?)撤回了一条消息\]\]>', note_.raw.get('Content')).group(1) != '你':
-            msg_id = int(re.search('<msgid>(.*?)</msgid>', note_.raw.get('Content')).group(1))
-            msg = self._get_msg_by_id(msg_id_=msg_id)
-            return msg, note_.create_time
+            _msg_id = int(re.search('<msgid>(.*?)</msgid>', note_.raw.get('Content')).group(1))
+            _msg = self._get_msg_by_id(msg_id_=_msg_id)
+            return _msg, note_.create_time
         return None, None
 
     def _backup_msg(self, msg_, recall_time_):
-        prefix = r'{} 于 {} 撤回了 {} 消息: '.format(
+        _prefix = r'{} 于 {} 撤回了 {} 消息: '.format(
             self._gen_log_sender(msg_), recall_time_.strftime(self._default_time_format), msg_.type)
-        self._send_msg(msg_=msg_, prefix_=prefix, send_to_=self._bot.file_helper)
-        self._logger.info(prefix[:-2])
+        self._send_msg(msg_=msg_, prefix_=_prefix, send_to_=self._bot.file_helper)
+        self._logger.info(_prefix[:-2])
 
     def _reply_sticker(self, msg_, sticker_name_=None):
-        sticker_path = self._path.get_sticker_path(sticker_name_=sticker_name_)
-        if sticker_path:
-            msg_.reply_image(path=sticker_path)
+        _sticker_path = self._path.get_sticker_path(sticker_name_=sticker_name_)
+        if _sticker_path:
+            msg_.reply_image(path=_sticker_path)
 
     def _send_msg(self, msg_, prefix_=None, send_to_=None):
         if not send_to_:
@@ -119,49 +119,49 @@ class WechatRecallBlocker(WechatComponents):
 
     @staticmethod
     def _get_name_prefix(msg_):
-        prefix = msg_.member.nick_name if msg_.member else r'你'
-        return prefix
+        _prefix = msg_.member.nick_name if msg_.member else r'你'
+        return _prefix
 
     @staticmethod
     def _get_prefix_text(msg_):
-        prefix = r'说：'
-        return prefix
+        _prefix = r'说：'
+        return _prefix
 
     @staticmethod
     def _get_prefix_recording(msg_):
-        prefix = r'发了条{}秒的语音：'.format(int(round(msg_.voice_length / 1000)))
-        return prefix
+        _prefix = r'发了条{}秒的语音：'.format(int(round(msg_.voice_length / 1000)))
+        return _prefix
 
     @staticmethod
     def _get_prefix_picture(msg_):
-        img_type = os.path.splitext(msg_.file_name)[1]
-        prefix_1 = r'发了个图片：'
-        prefix_2 = r'发了个表情：'
-        prefix_3 = r'发了个微信商店里的俗表情'
-        return prefix_1 if img_type != '.gif' else prefix_3 if msg_.raw.get('HasProductId') else prefix_2
+        _img_type = os.path.splitext(msg_.file_name)[1]
+        _prefix_1 = r'发了个图片：'
+        _prefix_2 = r'发了个表情：'
+        _prefix_3 = r'发了个微信商店里的俗表情'
+        return _prefix_1 if _img_type != '.gif' else _prefix_3 if msg_.raw.get('HasProductId') else _prefix_2
 
     @staticmethod
     def _get_prefix_video(msg_):
-        prefix = r'发了个{}秒的视频，不过我已经把它保存到电脑上了'.format(int(round(msg_.play_length)))
-        return prefix
+        _prefix = r'发了个{}秒的视频，不过我已经把它保存到电脑上了'.format(int(round(msg_.play_length)))
+        return _prefix
 
     @staticmethod
     def _get_prefix_sharing(msg_):
-        prefix = r'分享了个链接：'
-        return prefix
+        _prefix = r'分享了个链接：'
+        return _prefix
 
     @staticmethod
     def _get_prefix_card(msg_):
-        prefix = r'分享了一张{}的名片'.format(msg_.card.nick_name)
-        return prefix
+        _prefix = r'分享了一张{}的名片'.format(msg_.card.nick_name)
+        return _prefix
 
     @staticmethod
     def _get_prefix_map(msg_):
-        prefix = r'分享了一个位置：'
-        return prefix
+        _prefix = r'分享了一个位置：'
+        return _prefix
 
     @staticmethod
     def _get_prefix_attachment(msg_):
-        file_type = os.path.splitext(msg_.file_name)[1]
-        prefix = r'发了个{:.2f}KB的{}文件，不过我已经把它保存到电脑上了'.format(msg_.file_size / 1024, file_type[1:])
-        return prefix
+        _file_type = os.path.splitext(msg_.file_name)[1]
+        _prefix = r'发了个{:.2f}KB的{}文件，不过我已经把它保存到电脑上了'.format(msg_.file_size / 1024, _file_type[1:])
+        return _prefix

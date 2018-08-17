@@ -39,18 +39,18 @@ class WechatAutoReplier(WechatComponents):
                                  xiaoi_=self._config['auto_replier']['xiaoi'])
 
     def _auto_reply(self, msg_, tuling_=False, xiaoi_=False):
-        msg_reply = None
+        _msg_reply = None
         if tuling_ and not xiaoi_:
-            msg_reply = self._tuling.do_reply(msg_)
+            _msg_reply = self._tuling.do_reply(msg_)
         elif not tuling_ and xiaoi_:
-            msg_reply = self._xiaoi.do_reply(msg_)
+            _msg_reply = self._xiaoi.do_reply(msg_)
         elif tuling_ and xiaoi_:
             robot = self._random_robot()
             if robot == WechatRobotType.TULING:
-                msg_reply = self._tuling.do_reply(msg_)
+                _msg_reply = self._tuling.do_reply(msg_)
             elif robot == WechatRobotType.XIAOI:
-                msg_reply = self._xiaoi.do_reply(msg_)
-        self._log(msg_=msg_, msg_reply_=msg_reply)
+                _msg_reply = self._xiaoi.do_reply(msg_)
+        self._log(msg_=msg_, msg_reply_=_msg_reply)
 
     def _log(self, msg_, msg_reply_):
         self._logger.info(r'收到 {} 的信息：{}'.format(self._gen_log_sender(msg_), msg_.text))
@@ -58,5 +58,5 @@ class WechatAutoReplier(WechatComponents):
 
     @staticmethod
     def _random_robot():
-        index = random.randint(0, 1)
-        return WechatRobotType.TULING if index else WechatRobotType.XIAOI
+        _index = random.randint(0, 1)
+        return WechatRobotType.TULING if _index else WechatRobotType.XIAOI
