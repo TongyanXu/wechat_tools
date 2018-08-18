@@ -53,6 +53,7 @@ class WechatDefaultConfig(object):
         group_enable=False,
         friend_filter=[],
         group_filter=[],
+        backup_enable=False,
         sticker=dict(
             send_sticker=True,
             sticker_name=None))

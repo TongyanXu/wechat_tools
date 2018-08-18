@@ -43,7 +43,10 @@ class WechatRecallBlocker(WechatComponents):
             """
             msg, recall_time = self._get_recall_msg(note_=note)
             if msg:
-                self._backup_msg(msg, recall_time)
+                _shortcut = self._msg_shortcut(msg, recall_time)
+                if self._config.get('backup_enable', False):
+                    self._send_msg(msg_=msg, prefix_=_shortcut + ': ', send_to_=self._bot.file_helper)
+                self._logger.info(_shortcut)
                 if chat_type_.is_enabled:
                     if chat_type_.is_all or msg.sender.nick_name in chat_type_.filter:
                         if self._sticker_config.get('send_sticker'):
@@ -66,11 +69,9 @@ class WechatRecallBlocker(WechatComponents):
             return _msg, note_.create_time
         return None, None
 
-    def _backup_msg(self, msg_, recall_time_):
-        _prefix = r'{} 于 {} 撤回了 {} 消息: '.format(
+    def _msg_shortcut(self, msg_, recall_time_):
+        return r'{} 于 {} 撤回了 {} 消息'.format(
             self._gen_log_sender(msg_), recall_time_.strftime(self._default_time_format), msg_.type)
-        self._send_msg(msg_=msg_, prefix_=_prefix, send_to_=self._bot.file_helper)
-        self._logger.info(_prefix[:-2])
 
     def _reply_sticker(self, msg_, sticker_name_=None):
         _sticker_path = self._path.get_sticker_path(sticker_name_=sticker_name_)
