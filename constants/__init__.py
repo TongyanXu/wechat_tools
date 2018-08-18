@@ -55,8 +55,7 @@ class WechatDefaultConfig(object):
         group_filter=[],
         sticker=dict(
             send_sticker=True,
-            sticker_name=None,
-            random_sticker=True))
+            sticker_name=None))
 
     AUTO_REPLIER_CONFIG = dict(
         enable=False,
@@ -74,3 +73,8 @@ class WechatDefaultConfig(object):
         group_enable=False,
         friend_filter=[],
         group_filter=[])
+
+    LOGGING_CONFIG = dict(
+        stream=False,
+        file=False,
+        wechat=False)

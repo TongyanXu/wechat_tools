@@ -6,7 +6,7 @@ By modifying configs, wechat components may perform differently
 To see detailed info of each component, please check components repository
 """
 __author__ = 'Tongyan Xu'
-__version__ = '1.0.11'
+__version__ = '1.0.12'
 
 from wxpy import Bot, embed
 from constants import WechatComponentType, WechatDefaultConfig
@@ -16,11 +16,15 @@ from components import WechatComponents
 
 def run_wechat_utils(recall_blocker_config=WechatDefaultConfig.RECALL_BLOCKER_CONFIG,
                      auto_replier_config=WechatDefaultConfig.AUTO_REPLIER_CONFIG,
-                     auto_repeater_config=WechatDefaultConfig.AUTO_REPEATER_CONFIG):
+                     auto_repeater_config=WechatDefaultConfig.AUTO_REPEATER_CONFIG,
+                     logging_config=WechatDefaultConfig.LOGGING_CONFIG):
     """Run wechat components using configs"""
     path = WechatPathManager()
     bot = Bot(cache_path=path.cache_path)
     bot.enable_puid(path=path.puid_path)
+
+    for _config in [recall_blocker_config, auto_replier_config, auto_repeater_config]:
+        _config['logging_config'] = logging_config
 
     # if auto_replier_config['enable'] and auto_repeater_config['enable']:
     #     if auto_replier_config['friend_enable'] and auto_repeater_config['friend_enable']:
@@ -71,6 +75,7 @@ if __name__ == '__main__':
             group_enable=False,
             friend_filter=['whatever friends here'],
             group_filter=['whatever groups here'],
+            backup_enable=True,
             sticker=dict(
                 send_sticker=True,
                 sticker_name=None)),
@@ -88,4 +93,8 @@ if __name__ == '__main__':
             friend_enable=True,
             group_enable=False,
             friend_filter=['whatever friends here'],
-            group_filter=['whatever groups here']))
+            group_filter=['whatever groups here']),
+        logging_config=dict(
+            stream=True,
+            file=True,
+            wechat=True))

@@ -20,7 +20,7 @@ class WechatLogger(object):
         self._path = path_ if path_ else WechatPathManager()
         self._level = level_ if level_ else self._default_logger_level
 
-    def get_logger(self, stream_=True, file_=True):
+    def get_logger(self, stream_=True, file_=True, wechat_handler_=None):
         """Return a default wechat logger"""
         _default_logger = getLogger(self._name)
         _default_logger.setLevel(self._level)
@@ -28,16 +28,21 @@ class WechatLogger(object):
             _default_logger.addHandler(self._gen_stream_handler())
         if file_:
             _default_logger.addHandler(self._gen_file_handler())
+        if wechat_handler_:
+            self._setup_handler(wechat_handler_)
+            _default_logger.addHandler(wechat_handler_)
         return _default_logger
 
     def _gen_stream_handler(self):
         _stream_handler = StreamHandler()
-        _stream_handler.setLevel(self._level)
-        _stream_handler.setFormatter(self._default_formatter)
+        self._setup_handler(_stream_handler)
         return _stream_handler
 
     def _gen_file_handler(self):
-        _stream_handler = FileHandler(self._path.log_path.format(self._name))
-        _stream_handler.setLevel(self._level)
-        _stream_handler.setFormatter(self._default_formatter)
-        return _stream_handler
+        _file_handler = FileHandler(self._path.log_path.format(self._name))
+        self._setup_handler(_file_handler)
+        return _file_handler
+
+    def _setup_handler(self, handler_):
+        handler_.setLevel(self._level)
+        handler_.setFormatter(self._default_formatter)

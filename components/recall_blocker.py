@@ -17,11 +17,11 @@ class WechatRecallBlocker(WechatComponents):
 
     def __init__(self, bot_=None, path_=None, config_=WechatDefaultConfig.RECALL_BLOCKER_CONFIG, logger_=None):
         super(WechatRecallBlocker, self).__init__(bot_=bot_, path_=path_, config_=config_, logger_=logger_)
-        self._sticker_config = self._config.get('sticker', {})
+        self._sticker_config = self._config.pop('sticker', {})
         self._sticker_lib = {}
 
     def _register_auto_func(self, chat_type_=None):
-        @self._bot.register(chats=chat_type_.type, enabled=True, msg_types=WechatMsgType.LARGE_MSG)
+        @self._bot.register(chats=chat_type_.type, enabled=True, msg_types=WechatMsgType.SPECIAL_MSG)
         def msg_backup(msg):
             """
             Message attachment cache maker

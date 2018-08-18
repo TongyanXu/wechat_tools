@@ -12,7 +12,7 @@ configs and loggers.
 """
 __author__ = 'Tongyan Xu'
 
-from wxpy import Bot
+from wxpy import Bot, WeChatLoggingHandler
 from utils import WechatPathManager, WechatChatManager, WechatLogger
 from constants import WechatComponentType, WechatChatType
 
@@ -30,14 +30,15 @@ class WechatComponents(object):
     """
     _name = 'wechat_base_util'
 
-    _default_config = None
+    _default_config = {}
     _default_time_format = '%Y-%m-%d %H:%M:%S'
 
     def __init__(self, bot_=None, path_=None, config_=None, logger_=None):
         self._bot = bot_ if bot_ else Bot()
         self._path = path_ if path_ else WechatPathManager()
         self._config = config_ if config_ else self._default_config
-        self._logger = logger_ if logger_ else WechatLogger(name_=self._name, path_=self._path).get_logger()
+        self._logging_config = self._config.pop('logging_config', {})
+        self._logger = logger_ if logger_ else self._gen_logger()
         self._load_config()
 
     @classmethod
@@ -67,6 +68,13 @@ class WechatComponents(object):
             isinstance(msg_.sender, self._group.type) else '{}'.format(msg_.sender.nick_name) if \
             isinstance(msg_.sender, self._friend.type) else '未知'
         return _sender
+
+    def _gen_logger(self):
+        _wechat_handler = WeChatLoggingHandler() if self._logging_config.get('wechat', False) else None
+        _logger_creator = WechatLogger(name_=self._name, path_=self._path)
+        return _logger_creator.get_logger(stream_=self._logging_config.get('stream', False),
+                                          file_=self._logging_config.get('file', False),
+                                          wechat_handler_=_wechat_handler)
 
     def _load_config(self):
         self._friend = WechatChatManager(chat_type_=WechatChatType.FRIEND,
