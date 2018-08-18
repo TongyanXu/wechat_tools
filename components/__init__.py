@@ -38,8 +38,6 @@ class WechatComponents(object):
         self._path = path_ if path_ else WechatPathManager()
         self._config = config_ if config_ else self._default_config
         self._logger = logger_ if logger_ else WechatLogger(name_=self._name, path_=self._path).get_logger()
-        self._friend_enable = config_.get('friend_enable', False)
-        self._group_enable = config_.get('group_enable', False)
         self._load_config()
 
     @classmethod

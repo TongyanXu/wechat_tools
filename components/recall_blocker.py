@@ -17,6 +17,8 @@ class WechatRecallBlocker(WechatComponents):
 
     def __init__(self, bot_=None, path_=None, config_=WechatDefaultConfig.RECALL_BLOCKER_CONFIG, logger_=None):
         super(WechatRecallBlocker, self).__init__(bot_=bot_, path_=path_, config_=config_, logger_=logger_)
+        self._sticker_config = self._config.get('sticker', {})
+        self._sticker_lib = {}
 
     def _register_auto_func(self, chat_type_=None):
         @self._bot.register(chats=chat_type_.type, enabled=True, msg_types=WechatMsgType.LARGE_MSG)
@@ -44,8 +46,8 @@ class WechatRecallBlocker(WechatComponents):
                 self._backup_msg(msg, recall_time)
                 if chat_type_.is_enabled:
                     if chat_type_.is_all or msg.sender.nick_name in chat_type_.filter:
-                        if self._config['sticker']['send_sticker']:
-                            self._reply_sticker(msg_=msg, sticker_name_=self._config['sticker']['sticker_name'])
+                        if self._sticker_config.get('send_sticker'):
+                            self._reply_sticker(msg_=msg, sticker_name_=self._sticker_config.get('sticker_name'))
                         self._send_msg(msg_=msg)
 
     def _get_msg_by_id(self, msg_id_=None):
@@ -73,7 +75,10 @@ class WechatRecallBlocker(WechatComponents):
     def _reply_sticker(self, msg_, sticker_name_=None):
         _sticker_path = self._path.get_sticker_path(sticker_name_=sticker_name_)
         if _sticker_path:
-            msg_.reply_image(path=_sticker_path)
+            if _sticker_path not in self._sticker_lib:
+                _media_id = self._bot.upload_file(_sticker_path)
+                self._sticker_lib[_sticker_path] = _media_id
+                msg_.reply_image(path=_sticker_path, media_id=self._sticker_lib[_sticker_path])
 
     def _send_msg(self, msg_, prefix_=None, send_to_=None):
         if not send_to_:
