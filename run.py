@@ -6,7 +6,7 @@ By modifying configs, wechat components may perform differently
 To see detailed info of each component, please check components repository
 """
 __author__ = 'Tongyan Xu'
-__version__ = '1.0.12'
+__version__ = '1.0.13'
 
 from wxpy import Bot, embed
 from constants import WechatComponentType, WechatDefaultConfig
