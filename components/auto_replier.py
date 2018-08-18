@@ -13,7 +13,7 @@ class WechatAutoReplier(WechatComponents):
     Wechat auto-replier
     Can work on both friend and group chats
     """
-    _name = 'wechat_autp_replier'
+    _name = 'wechat_auto_replier'
 
     _tuling_api_key = '60d93972232d42f3b7428ae3631b7289'
     _xiaoi_key = 'aIxBk61kStUm'

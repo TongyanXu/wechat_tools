@@ -6,7 +6,7 @@ By modifying configs, wechat components may perform differently
 To see detailed info of each component, please check components repository
 """
 __author__ = 'Tongyan Xu'
-__version__ = '1.1.0'
+__version__ = '1.1.1'
 
 from wxpy import Bot, embed, WeChatLoggingHandler
 from constants import WechatComponentType, WechatDefaultConfig
@@ -20,12 +20,12 @@ class WechatTools(object):
     _tools = [{'type': WechatComponentType.RECALL_BLOCKER,
                'config_key': 'recall_blocker_config',
                'config': WechatDefaultConfig.RECALL_BLOCKER_CONFIG},
-              {'type': WechatComponentType.AUTO_REPLIER,
-               'config_key': 'auto_replier_config',
-               'config': WechatDefaultConfig.AUTO_REPLIER_CONFIG},
               {'type': WechatComponentType.AUTO_REPEATER,
                'config_key': 'auto_repeater_config',
-               'config': WechatDefaultConfig.AUTO_REPEATER_CONFIG}]
+               'config': WechatDefaultConfig.AUTO_REPEATER_CONFIG},
+              {'type': WechatComponentType.AUTO_REPLIER,
+               'config_key': 'auto_replier_config',
+               'config': WechatDefaultConfig.AUTO_REPLIER_CONFIG}]
     _enabled_tools = []
     _working_components = []
 
@@ -96,7 +96,7 @@ if __name__ == '__main__':
                 send_sticker=True,
                 sticker_name=None)),
         auto_replier_config=dict(
-            enable=False,
+            enable=True,
             friend_enable=True,
             group_enable=False,
             friend_filter=['whatever friends here'],
@@ -105,7 +105,7 @@ if __name__ == '__main__':
                 tuling=True,
                 xiaoi=False)),
         auto_repeater_config=dict(
-            enable=False,
+            enable=True,
             friend_enable=True,
             group_enable=False,
             friend_filter=['whatever friends here'],

@@ -79,7 +79,7 @@ class WechatRecallBlocker(WechatComponents):
             if _sticker_path not in self._sticker_lib:
                 _media_id = self._bot.upload_file(_sticker_path)
                 self._sticker_lib[_sticker_path] = _media_id
-                msg_.reply_image(path=_sticker_path, media_id=self._sticker_lib[_sticker_path])
+            msg_.reply_image(path=_sticker_path, media_id=self._sticker_lib[_sticker_path])
 
     def _send_msg(self, msg_, prefix_=None, send_to_=None):
         if not send_to_:
