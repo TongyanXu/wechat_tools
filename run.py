@@ -6,46 +6,62 @@ By modifying configs, wechat components may perform differently
 To see detailed info of each component, please check components repository
 """
 __author__ = 'Tongyan Xu'
-__version__ = '1.0.14'
+__version__ = '1.1.0'
 
-from wxpy import Bot, embed
+from wxpy import Bot, embed, WeChatLoggingHandler
 from constants import WechatComponentType, WechatDefaultConfig
-from utils.path import WechatPathManager
+from utils import WechatPathManager, WechatLogger
 from components import WechatComponents
 
 
-def run_wechat_utils(recall_blocker_config=WechatDefaultConfig.RECALL_BLOCKER_CONFIG,
-                     auto_replier_config=WechatDefaultConfig.AUTO_REPLIER_CONFIG,
-                     auto_repeater_config=WechatDefaultConfig.AUTO_REPEATER_CONFIG,
-                     logging_config=WechatDefaultConfig.LOGGING_CONFIG):
-    """Run wechat components using configs"""
-    path = WechatPathManager()
-    bot = Bot(cache_path=path.cache_path)
-    bot.enable_puid(path=path.puid_path)
+class WechatTools(object):
+    """..."""
+    _name = 'wechat_tools_main'
+    _tools = [{'type': WechatComponentType.RECALL_BLOCKER,
+               'config_key': 'recall_blocker_config',
+               'config': WechatDefaultConfig.RECALL_BLOCKER_CONFIG},
+              {'type': WechatComponentType.AUTO_REPLIER,
+               'config_key': 'auto_replier_config',
+               'config': WechatDefaultConfig.AUTO_REPLIER_CONFIG},
+              {'type': WechatComponentType.AUTO_REPEATER,
+               'config_key': 'auto_repeater_config',
+               'config': WechatDefaultConfig.AUTO_REPEATER_CONFIG}]
+    _enabled_tools = []
+    _working_components = []
 
-    for _config in [recall_blocker_config, auto_replier_config, auto_repeater_config]:
-        _config['logging_config'] = logging_config
+    def __init__(self, config_=None):
+        self._path = WechatPathManager()
+        self._config = config_ if config_ else {}
+        self._logging_config = self._config.pop('logging_config', WechatDefaultConfig.LOGGING_CONFIG)
+        self._gen_logger()
+        self._setup_tools()
+        self._setup_bot()
 
-    # if auto_replier_config['enable'] and auto_repeater_config['enable']:
-    #     if auto_replier_config['friend_enable'] and auto_repeater_config['friend_enable']:
-    #         auto_repeater_config['friend_enable'] = False
-    #     if auto_replier_config['group_enable'] and auto_repeater_config['group_enable']:
-    #         auto_repeater_config['group_enable'] = False
+    def _gen_logger(self):
+        _logger_creator = WechatLogger(name_=self._name, path_=self._path)
+        self._logger = _logger_creator.get_logger(stream_=self._logging_config.get('stream', False),
+                                                  file_=self._logging_config.get('file', False))
 
-    if recall_blocker_config['enable']:
-        recall_blocker = WechatComponents.get_wechat_util(util_type_=WechatComponentType.RECALL_BLOCKER,
-                                                          bot_=bot, path_=path, config_=recall_blocker_config)
-        recall_blocker.run()
-    if auto_repeater_config['enable']:
-        auto_repeater = WechatComponents.get_wechat_util(util_type_=WechatComponentType.AUTO_REPEATER,
-                                                         bot_=bot, path_=path, config_=auto_repeater_config)
-        auto_repeater.run()
-    if auto_replier_config['enable']:
-        auto_replier = WechatComponents.get_wechat_util(util_type_=WechatComponentType.AUTO_REPLIER,
-                                                        bot_=bot, path_=path, config_=auto_replier_config)
-        auto_replier.run()
+    def _setup_tools(self):
+        for _tool in self._tools:
+            _tool['config'] = self._config.pop(_tool['config_key'], _tool['config'])
+            _tool['config']['logging_config'] = self._logging_config
+            if _tool['config'].get('enable'):
+                self._enabled_tools.append(_tool)
 
-    embed()
+    def _setup_bot(self):
+        self._bot = Bot(cache_path=self._path.cache_path)
+        self._bot.enable_puid(path=self._path.puid_path)
+
+    def run(self):
+        """Run wechat components using configs"""
+        for _t in self._enabled_tools:
+            _comp = WechatComponents.get_wechat_util(
+                util_type_=_t['type'], bot_=self._bot, path_=self._path, config_=_t['config'])
+            self._working_components.append(_comp)
+            _comp.run()
+
+        embed()
 
 
 if __name__ == '__main__':
@@ -68,7 +84,7 @@ if __name__ == '__main__':
     WARNING: Tuling is preferred in auto-replier
              If both Tuling and XiaoI are enabled, XiaoI will be automatically ignored
     """
-    run_wechat_utils(
+    config = dict(
         recall_blocker_config=dict(
             enable=True,
             friend_enable=True,
@@ -96,5 +112,7 @@ if __name__ == '__main__':
             group_filter=['whatever groups here']),
         logging_config=dict(
             stream=True,
-            file=True,
-            wechat=True))
+            file=True))
+
+    main_tool = WechatTools(config_=config)
+    main_tool.run()

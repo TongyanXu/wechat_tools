@@ -21,7 +21,7 @@ class WechatRecallBlocker(WechatComponents):
         self._sticker_lib = {}
 
     def _register_auto_func(self, chat_type_=None):
-        @self._bot.register(chats=chat_type_.type, enabled=True, msg_types=WechatMsgType.SPECIAL_MSG)
+        @self._bot.register(chats=chat_type_.type, enabled=True, msg_types=WechatMsgType.LARGE_MSG)
         def msg_backup(msg):
             """
             Message attachment cache maker

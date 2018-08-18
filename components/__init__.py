@@ -37,7 +37,6 @@ class WechatComponents(object):
         self._bot = bot_ if bot_ else Bot()
         self._path = path_ if path_ else WechatPathManager()
         self._config = config_ if config_ else self._default_config
-        self._logging_config = self._config.pop('logging_config', {})
         self._logger = logger_ if logger_ else self._gen_logger()
         self._load_config()
 
@@ -70,11 +69,10 @@ class WechatComponents(object):
         return _sender
 
     def _gen_logger(self):
-        _wechat_handler = WeChatLoggingHandler() if self._logging_config.get('wechat', False) else None
+        self._logging_config = self._config.pop('logging_config', {})
         _logger_creator = WechatLogger(name_=self._name, path_=self._path)
         return _logger_creator.get_logger(stream_=self._logging_config.get('stream', False),
-                                          file_=self._logging_config.get('file', False),
-                                          wechat_handler_=_wechat_handler)
+                                          file_=self._logging_config.get('file', False))
 
     def _load_config(self):
         self._friend = WechatChatManager(chat_type_=WechatChatType.FRIEND,
