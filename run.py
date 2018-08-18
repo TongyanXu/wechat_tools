@@ -6,9 +6,9 @@ By modifying configs, wechat components may perform differently
 To see detailed info of each component, please check components repository
 """
 __author__ = 'Tongyan Xu'
-__version__ = '1.1.1'
+__version__ = '1.1.2'
 
-from wxpy import Bot, embed, WeChatLoggingHandler
+from wxpy import Bot, embed
 from constants import WechatComponentType, WechatDefaultConfig
 from utils import WechatPathManager, WechatLogger
 from components import WechatComponents
@@ -48,6 +48,7 @@ class WechatTools(object):
             _tool['config']['logging_config'] = self._logging_config
             if _tool['config'].get('enable'):
                 self._enabled_tools.append(_tool)
+                self._logger.info('wechat component <{}> to be activated.'.format(_tool['type']))
 
     def _setup_bot(self):
         self._bot = Bot(cache_path=self._path.cache_path)
@@ -60,7 +61,9 @@ class WechatTools(object):
                 util_type_=_t['type'], bot_=self._bot, path_=self._path, config_=_t['config'])
             self._working_components.append(_comp)
             _comp.run()
+            self._logger.info('wechat component <{}> is activated.'.format(_t['type']))
 
+        self._logger.info('all components activated successfully.')
         embed()
 
 

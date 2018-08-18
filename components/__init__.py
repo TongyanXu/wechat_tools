@@ -12,7 +12,7 @@ configs and loggers.
 """
 __author__ = 'Tongyan Xu'
 
-from wxpy import Bot, WeChatLoggingHandler
+from wxpy import Bot
 from utils import WechatPathManager, WechatChatManager, WechatLogger
 from constants import WechatComponentType, WechatChatType
 
