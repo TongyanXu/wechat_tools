@@ -29,10 +29,6 @@ class WechatComponents(object):
     Then, the instance, wechat_util, is ready to be used for specific purposes
     """
     _name = 'wechat_base_util'
-    _friend_enable = False
-    _group_enable = False
-    _friend_filter = []
-    _group_filter = []
 
     _default_config = None
     _default_time_format = '%Y-%m-%d %H:%M:%S'
@@ -42,6 +38,8 @@ class WechatComponents(object):
         self._path = path_ if path_ else WechatPathManager()
         self._config = config_ if config_ else self._default_config
         self._logger = logger_ if logger_ else WechatLogger(name_=self._name, path_=self._path).get_logger()
+        self._friend_enable = config_.get('friend_enable', False)
+        self._group_enable = config_.get('group_enable', False)
         self._load_config()
 
     @classmethod
@@ -74,12 +72,12 @@ class WechatComponents(object):
 
     def _load_config(self):
         self._friend = WechatChatManager(chat_type_=WechatChatType.FRIEND,
-                                         enabled_=self._config['friend_enable'],
-                                         original_filter_=self._config['friend_filter'],
+                                         enabled_=self._config.get('friend_enable', False),
+                                         original_filter_=self._config.get('friend_filter', []),
                                          bot_=self._bot,
                                          logger_=self._logger)
         self._group = WechatChatManager(chat_type_=WechatChatType.GROUP,
-                                        enabled_=self._config['group_enable'],
-                                        original_filter_=self._config['group_filter'],
+                                        enabled_=self._config.get('group_enable', False),
+                                        original_filter_=self._config.get('group_filter', []),
                                         bot_=self._bot,
                                         logger_=self._logger)

@@ -19,13 +19,14 @@ class WechatChatManager(object):
         self._name = chat_type_
         self._set_type()
         self._enabled = enabled_
+        self._enabled_real = enabled_
         self._original_filter = original_filter_
         self._apply_filter()
 
     @property
     def is_enabled(self):
         """Return current chat is enabled or not"""
-        return self._enabled
+        return self._enabled_real
 
     @property
     def filter(self):
@@ -51,15 +52,15 @@ class WechatChatManager(object):
 
     def _apply_filter(self):
         self._process_filter()
-        self._enabled = False if not self._filter and self._fail_filter else self._enabled
-        self._all = True if not self._filter and self._enabled else False
-        if self._enabled and not self._all:
+        self._enabled_real = False if not self._filter and self._fail_filter else self._enabled
+        self._all = True if not self._filter and self._enabled_real else False
+        if self._enabled_real and not self._all:
             self._logger.info('{:6} chats are registered with filter: {}'.format(self._name, self._filter))
-        elif self._enabled and self._all:
+        elif self._enabled_real and self._all:
             self._logger.warning('{:6} chats are registered without filter.'.format(self._name))
         else:
             self._logger.info('{:6} chats are disabled.'.format(self._name))
-        if self._fail_filter:
+        if self._enabled and self._fail_filter:
             self._logger.error('FAILED to recognize following users in filter: {}'.format(self._fail_filter))
 
     def _process_filter(self):
