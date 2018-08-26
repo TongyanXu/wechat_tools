@@ -2,10 +2,9 @@
 """Wechat Auto-Replier, to reply user's messages automatically through AI robots"""
 __author__ = 'Tongyan Xu'
 
+from components import WechatComponents
+from constants import WechatDefaultConfig, WechatMsgType
 from wxpy import Tuling, XiaoI
-import random
-from . import WechatComponents
-from constants import WechatMsgType, WechatRobotType, WechatDefaultConfig
 
 
 class WechatAutoReplier(WechatComponents):

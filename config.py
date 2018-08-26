@@ -1,0 +1,33 @@
+# coding=utf-8
+"""..."""
+__author__ = 'Tongyan Xu'
+
+config = dict(
+    recall_blocker_config=dict(
+        enable=True,
+        friend_enable=True,
+        group_enable=False,
+        friend_filter=['whatever friends here'],
+        group_filter=['whatever groups here'],
+        backup_enable=True,
+        sticker=dict(
+            send_sticker=True,
+            sticker_name=None)),
+    auto_replier_config=dict(
+        enable=False,
+        friend_enable=True,
+        group_enable=False,
+        friend_filter=['whatever friends here'],
+        group_filter=['whatever groups here'],
+        auto_replier=dict(
+            tuling=True,
+            xiaoi=False)),
+    auto_repeater_config=dict(
+        enable=False,
+        friend_enable=True,
+        group_enable=False,
+        friend_filter=['whatever friends here'],
+        group_filter=['whatever groups here']),
+    logging_config=dict(
+        stream=True,
+        file=True))

@@ -1,6 +1,6 @@
 # coding=utf-8
 """Wechat utils"""
 
-from .chat import WechatChatManager
-from .path import WechatPathManager
-from .logger import WechatLogger
+from utils.chat import WechatChatManager
+from utils.logger import WechatLogger
+from utils.path import WechatPathManager

@@ -4,7 +4,7 @@ __author__ = 'Tongyan Xu'
 
 import re
 import os
-from . import WechatComponents
+from components import WechatComponents
 from constants import WechatMsgType, WechatDefaultConfig
 
 

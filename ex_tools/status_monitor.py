@@ -1,9 +1,10 @@
 # coding=utf-8
 """Status monitor on wechat, to report progress / status of project on wechat"""
 
-from wxpy import get_wechat_logger
-from logging import INFO
 from datetime import datetime
+from logging import INFO
+from wxpy import get_wechat_logger
+
 
 wechat_logger = get_wechat_logger(name='status_monitor', level=INFO)
 time_format = '%Y-%m-%d %H:%M:%S'

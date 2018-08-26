@@ -2,7 +2,7 @@
 """Frequently used constants"""
 __author__ = 'Tongyan Xu'
 
-from wxpy import TEXT, RECORDING, PICTURE, VIDEO, SHARING, CARD, MAP, ATTACHMENT, NOTE, SYSTEM
+from wxpy import ATTACHMENT, CARD, MAP, NOTE, PICTURE, RECORDING, SHARING, SYSTEM, TEXT, VIDEO
 
 
 class WechatMsgType(object):

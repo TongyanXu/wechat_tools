@@ -2,10 +2,10 @@
 """Wechat Path Manager for all kinds of file & path supports"""
 __author__ = 'Tongyan Xu'
 
-import os
 import json
-import time
+import os
 import random
+import time
 
 
 class WechatPathManager(object):
@@ -14,6 +14,8 @@ class WechatPathManager(object):
     Can return file path needed in whole project
     Used for file & path management
     """
+    _base_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+
     _static = 'static'
     _cache = 'cache'
     _log = 'log'
@@ -29,9 +31,9 @@ class WechatPathManager(object):
     _cache_info = {}
 
     def __init__(self):
-        self._static_dir = os.path.join(os.path.curdir, self._static)
-        self._cache_dir = os.path.join(os.path.curdir, self._cache)
-        self._log_dir = os.path.join(os.path.curdir, self._log)
+        self._static_dir = os.path.join(self._base_dir, self._static)
+        self._cache_dir = os.path.join(self._base_dir, self._cache)
+        self._log_dir = os.path.join(self._base_dir, self._log)
         self._temp_dir = os.path.join(self._cache_dir, self._temp)
 
         self._cache_file_path = os.path.join(self._cache_dir, self._cache_file)

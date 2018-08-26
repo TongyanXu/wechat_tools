@@ -2,7 +2,6 @@
 """Test - wechat monitor"""
 
 from ex_tools.status_monitor import status_monitor_on_wechat
-from logging import ERROR
 
 
 @status_monitor_on_wechat

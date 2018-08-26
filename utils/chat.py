@@ -2,8 +2,8 @@
 """Wechat Chat Manager for chat type management and filter generation"""
 
 from constants import WechatChatType
-from wxpy import Bot, Friend, Group
 from logging import getLogger
+from wxpy import Bot, Friend, Group
 
 
 class WechatChatManager(object):

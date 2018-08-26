@@ -1,8 +1,8 @@
 # coding=utf-8
 """Wechat Logger for logging management"""
 
-from logging import getLogger, StreamHandler, FileHandler, Formatter, INFO
-from . import WechatPathManager
+from logging import FileHandler, Formatter, INFO, StreamHandler, getLogger
+from utils.path import WechatPathManager
 
 
 class WechatLogger(object):

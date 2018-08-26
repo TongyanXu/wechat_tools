@@ -2,8 +2,8 @@
 """Wechat Auto-Repeater, to simply repeat user's messages"""
 __author__ = 'Tongyan Xu'
 
-from . import WechatComponents
-from constants import WechatMsgType, WechatDefaultConfig
+from components import WechatComponents
+from constants import WechatDefaultConfig, WechatMsgType
 
 
 class WechatAutoRepeater(WechatComponents):

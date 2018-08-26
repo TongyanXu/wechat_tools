@@ -12,9 +12,9 @@ configs and loggers.
 """
 __author__ = 'Tongyan Xu'
 
+from constants import WechatChatType, WechatComponentType
+from utils import WechatChatManager, WechatLogger, WechatPathManager
 from wxpy import Bot
-from utils import WechatPathManager, WechatChatManager, WechatLogger
-from constants import WechatComponentType, WechatChatType
 
 
 class WechatComponents(object):
