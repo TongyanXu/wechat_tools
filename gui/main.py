@@ -4,12 +4,15 @@ __author__ = 'Tongyan Xu'
 
 import sys
 from PyQt5.QtCore import QObject, QThread, Qt, pyqtSignal
-from PyQt5.QtWidgets import QAction, QApplication, QCheckBox, QComboBox, QGridLayout, QLabel, QMainWindow, QTextEdit
+from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QAbstractItemView, QAction, QApplication, QCheckBox, QComboBox, QGridLayout, QHBoxLayout
+from PyQt5.QtWidgets import QLabel, QListWidget, QListWidgetItem, QMainWindow, QPushButton, QTabWidget, QTextEdit
 from PyQt5.QtWidgets import QVBoxLayout, QWidget
 from config import config
-from gui.definitions import SEPARATOR, WidgetType
+from gui.definitions import Separator, WidgetType
+from gui.chat import ChatSetter
 from gui.utilities import GuiUtils
-from main_tool import WechatTools
+from main_tool import WechatTools, tools
 
 
 class WechatThread(QObject):
@@ -27,70 +30,119 @@ class WechatThread(QObject):
         self._wechat_tool.run()
 
     def stop(self):
+        """..."""
         self._wechat_tool.stop()
         self._wechat_tool = None
 
 
 class MainWindow(QMainWindow):
     """..."""
-    def __init__(self):
+    def __init__(self, config_, tools_):
         super(MainWindow, self).__init__()
+        self._config = config_
+        self._tools = tools_
         self._setup_sub_thread()
         self._setup_ui()
         self.show()
 
     def _setup_ui(self):
         self.setWindowTitle('Wechat Tools')
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(100, 100, 600, 400)
         self._set_menu_bar()
         self._set_main_window()
 
     def _set_main_window(self):
-        self._sub_window = QWidget()
-        _grid = QGridLayout(self._sub_window)
-        self._info_window = self._set_info_window()
+        _tab = QTabWidget()
+        self._info_window = self._set_tool_window()
         self._console_window = GuiUtils.console_window()
-        _grid.addWidget(self._info_window, 0, 0, 1, 2)
-        _grid.addWidget(self._console_window, 0, 2, 1, 3)
-        self._sub_window.setLayout(_grid)
-        self.setCentralWidget(self._sub_window)
+        _tab.addTab(self._info_window, 'Tools Settings')
+        _tab.addTab(self._console_window, 'Console Window')
+        self.setCentralWidget(_tab)
 
-    def _set_info_window(self):
-        _name = 'Info Window'
-        _info_window = QWidget()
-        _info_window.setObjectName(_name)
+    def _set_tool_window(self):
+        _window = QWidget()
+        _win_layout = QHBoxLayout()
 
-        _tool = QGridLayout()
-        _tool_label = QLabel('Wechat Tool')
-        _tool_type = QComboBox()
-        _tool.addWidget(_tool_label, 0, 0, 1, 4)
-        _tool.addWidget(_tool_type, 0, 4, 1, 16)
-
-        _tool_enabled_label = QLabel('Enabled')
-        _tool_enabled = QCheckBox()
-        _tool.addWidget(_tool_enabled_label, 0, 20, 1, 3, Qt.AlignRight)
-        _tool.addWidget(_tool_enabled, 0, 23, 1, 1, Qt.AlignRight)
-
-        _friend = QVBoxLayout()
-        _friend_label = QLabel('Friend Chat')
-        _friend_text = QTextEdit()
-        _friend.addWidget(_friend_label)
-        _friend.addWidget(_friend_text)
-        _friend.setSpacing(0)
-
-        _group = QVBoxLayout()
-        _group_label = QLabel('Group Chat')
-        _group_text = QTextEdit()
-        _group.addWidget(_group_label)
-        _group.addWidget(_group_text)
-        _group.setSpacing(0)
-
+        _tool_list = QWidget()
         _vbox = QVBoxLayout()
-        _vbox.addLayout(_tool)
-        _vbox.addLayout(_friend)
-        _vbox.addLayout(_group)
-        _info_window.setLayout(_vbox)
-        return _info_window
+        self._all_tools = QCheckBox('Wechat Tools')
+        self._all_tools.stateChanged.connect(self._on_check_all)
+        self._tool_list = QListWidget()
+        self._tool_list.setSelectionMode(QAbstractItemView.SingleSelection)
+        for _t in self._tools:
+            _enable = self._config[_t['config_key']]['enable']
+            _check_state = Qt.Checked if _enable else Qt.Unchecked
+            _item = QListWidgetItem()
+            _item.setText(_t['type'])
+            _item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+            _item.setCheckState(_check_state)
+            self._tool_list.addItem(_item)
+        self._tool_list.itemClicked.connect(self._on_tool_clicked)
+
+        _vbox.addWidget(self._all_tools)
+        _vbox.addWidget(self._tool_list)
+        _tool_list.setLayout(_vbox)
+        _win_layout.addWidget(_tool_list)
+
+        self._friend_filter = ChatSetter('Friend Chat')
+        self._friend_filter.saved.connect(self._save_filter)
+        _win_layout.addWidget(self._friend_filter)
+        self._group_filter = ChatSetter('Group Chat')
+        self._group_filter.saved.connect(self._save_filter)
+        _win_layout.addWidget(self._group_filter)
+
+        self._default_tool = 0
+        self._tool_list.setCurrentRow(self._default_tool)
+        self._display_tool_setting(self._default_tool)
+        self._tool_list.currentItem().setBackground(QColor(0, 105, 217))
+        self._tool_list.currentItem().setForeground(QColor('white'))
+
+        _window.setLayout(_win_layout)
+        return _window
+
+    def _on_check_all(self):
+        if self._all_tools.isChecked():
+            for _index in range(self._tool_list.count()):
+                self._tool_list.item(_index).setCheckState(Qt.Checked)
+        else:
+            for _index in range(self._tool_list.count()):
+                self._tool_list.item(_index).setCheckState(Qt.Unchecked)
+
+    def _on_tool_clicked(self, item_):
+        self._tool_list.setCurrentItem(item_)
+        for _index in range(self._tool_list.count()):
+            self._tool_list.item(_index).setBackground(QColor('white'))
+            self._tool_list.item(_index).setForeground(QColor('black'))
+        item_.setBackground(QColor(0, 105, 217))
+        item_.setForeground(QColor('white'))
+        _index = self._tool_list.currentRow()
+        self._display_tool_setting(_index)
+
+    def _display_tool_setting(self, tool_index_):
+        _config = self._config[self._tools[tool_index_]['config_key']]
+        _friend_enable = _config['friend_enable']
+        _group_enable = _config['group_enable']
+        _friend_filter = _config['friend_filter']
+        _group_filter = _config['group_filter']
+        self._friend_filter.enable(_friend_enable)
+        self._group_filter.enable(_group_enable)
+        self._friend_filter.display_filter(_friend_filter)
+        self._group_filter.display_filter(_group_filter)
+
+    def _save_filter(self, name_, enable_, filter_):
+        _index = self._tool_list.currentRow()
+        _config = self._config[self._tools[_index]['config_key']]
+        if name_ == 'Friend Chat':
+            _config['friend_enable'] = enable_
+            _config['friend_filter'] = filter_
+        elif name_ == 'Group Chat':
+            _config['group_enable'] = enable_
+            _config['group_filter'] = filter_
+
+    def _save_tool(self):
+        for _index in range(self._tool_list.count()):
+            self._config[self._tools[_index]['config_key']]['enable'] = \
+                self._tool_list.item(_index).checkState() == Qt.Checked
 
     def _set_menu_bar(self):
         self._menu_bar = self.menuBar()
@@ -120,7 +172,7 @@ class MainWindow(QMainWindow):
 
     def _add_menu(self, menu_name_, menu_params_, menu_=None):
         _menu = menu_ if menu_ else self._menu_bar
-        _menu_group = menu_name_.split(SEPARATOR)
+        _menu_group = menu_name_.split(Separator.OBJ)
         if len(_menu_group) == 1:
             _menu_btn = QAction(menu_name_, self)
             _menu_btn.triggered.connect(menu_params_[0])
@@ -131,32 +183,32 @@ class MainWindow(QMainWindow):
             _sub_menu_name = _menu_group.pop(0)
             _sub_menu = GuiUtils.get_widget_by_name(_menu, _sub_menu_name) or _menu.addMenu(_sub_menu_name)
             GuiUtils.add_widget(_menu, _sub_menu, _sub_menu_name, WidgetType.MENU)
-            _rest_menu_name = SEPARATOR.join(_menu_group)
+            _rest_menu_name = Separator.OBJ.join(_menu_group)
             self._add_menu(_rest_menu_name, menu_params_, _sub_menu)
 
     def _get_menu_wgt(self, menu_name_, menu_=None):
         _menu = menu_ if menu_ else self._menu_bar
-        _menu_group = menu_name_.split(SEPARATOR)
+        _menu_group = menu_name_.split(Separator.OBJ)
         if len(_menu_group) == 1:
             return GuiUtils.get_widget_by_name(_menu, menu_name_)
         else:
             _sub_menu_name = _menu_group.pop(0)
             _sub_menu = GuiUtils.get_widget_by_name(_menu, _sub_menu_name)
-            _rest_menu_name = SEPARATOR.join(_menu_group)
+            _rest_menu_name = Separator.OBJ.join(_menu_group)
             return self._get_menu_wgt(_rest_menu_name, _sub_menu)
 
     def _test_action(self):
-        GuiUtils.info_dialog(self, 'Quit', 'No integrated yet.')
+        GuiUtils.info_dialog(self, 'Test', 'No integrated yet.')
 
     def _setup_sub_thread(self):
         self._sub_thread = QThread()
-        self._wechat_tools = WechatThread(config_=config)
+        self._wechat_tools = WechatThread(config_=self._config)
         self._wechat_tools.moveToThread(self._sub_thread)
         self._sub_thread.started.connect(self._wechat_tools.run)
 
     def _run(self):
+        self._save_tool()
         self._sub_thread.start()
-        print('Start running wechat tools on tid {}'.format(self._sub_thread.currentThreadId()))
         self._get_menu_wgt('Main.Run').setDisabled(True)
         self._get_menu_wgt('Main.Stop').setDisabled(False)
 
@@ -183,5 +235,5 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = MainWindow()
+    ex = MainWindow(config_=config, tools_=tools)
     sys.exit(app.exec_())

@@ -2,10 +2,14 @@
 """..."""
 __author__ = 'Tongyan Xu'
 
-SEPARATOR = '.'
-
 
 class WidgetType(object):
     """..."""
     MENU = 'Menu'
     BTN = 'Btn'
+
+
+class Separator(object):
+    """..."""
+    OBJ = '.'
+    TEXT = ','

@@ -6,7 +6,7 @@ By modifying configs, wechat components may perform differently
 To see detailed info of each component, please check components repository
 """
 __author__ = 'Tongyan Xu'
-__version__ = '1.2.1'
+__version__ = '1.2.2'
 
 from components import WechatComponents
 from constants import WechatComponentType, WechatDefaultConfig
@@ -14,22 +14,24 @@ from time import sleep
 from utils import WechatLogger, WechatPathManager
 from wxpy import Bot, embed
 
+tools = [{'type': WechatComponentType.RECALL_BLOCKER,
+          'config_key': 'recall_blocker_config',
+          'config': WechatDefaultConfig.RECALL_BLOCKER_CONFIG},
+         {'type': WechatComponentType.AUTO_REPEATER,
+          'config_key': 'auto_repeater_config',
+          'config': WechatDefaultConfig.AUTO_REPEATER_CONFIG},
+         {'type': WechatComponentType.AUTO_REPLIER,
+          'config_key': 'auto_replier_config',
+          'config': WechatDefaultConfig.AUTO_REPLIER_CONFIG}]
+
 
 class WechatTools(object):
     """..."""
     _name = 'wechat_tools_main'
-    _tools = [{'type': WechatComponentType.RECALL_BLOCKER,
-               'config_key': 'recall_blocker_config',
-               'config': WechatDefaultConfig.RECALL_BLOCKER_CONFIG},
-              {'type': WechatComponentType.AUTO_REPEATER,
-               'config_key': 'auto_repeater_config',
-               'config': WechatDefaultConfig.AUTO_REPEATER_CONFIG},
-              {'type': WechatComponentType.AUTO_REPLIER,
-               'config_key': 'auto_replier_config',
-               'config': WechatDefaultConfig.AUTO_REPLIER_CONFIG}]
 
-    def __init__(self, config_=None, sub_thread_=False):
+    def __init__(self, config_=None, tools_=tools, sub_thread_=False):
         self._path = WechatPathManager()
+        self._tools = tools_
         self._config = config_ if config_ else {}
         self._logging_config = self._config.pop('logging_config', WechatDefaultConfig.LOGGING_CONFIG)
         self._gen_logger()

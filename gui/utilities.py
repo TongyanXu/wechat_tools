@@ -3,9 +3,9 @@
 __author__ = 'Tongyan Xu'
 
 import sys
-from PyQt5.QtWidgets import QLabel, QMessageBox, QTextEdit, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QInputDialog, QLabel, QLineEdit, QMessageBox, QTextEdit, QVBoxLayout, QWidget
 from gui.custom import EmittingStream
-from gui.definitions import SEPARATOR
+from gui.definitions import Separator
 
 
 class GuiUtils(object):
@@ -46,19 +46,25 @@ class GuiUtils(object):
     @classmethod
     def combine_name(cls, list_of_name_):
         """..."""
-        return SEPARATOR.join(list_of_name_)
+        return Separator.OBJ.join(list_of_name_)
 
     @classmethod
     def info_dialog(cls, parent_, title_, info_):
         """..."""
-        reply = QMessageBox.information(parent_, title_, info_, QMessageBox.Yes, QMessageBox.Yes)
-        return reply == QMessageBox.Yes
+        _reply = QMessageBox.information(parent_, title_, info_, QMessageBox.Yes, QMessageBox.Yes)
+        return _reply == QMessageBox.Yes
 
     @classmethod
     def question_dialog(cls, parent_, title_, info_):
         """..."""
-        reply = QMessageBox.question(parent_, title_, info_, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        return reply == QMessageBox.Yes
+        _reply = QMessageBox.question(parent_, title_, info_, QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        return _reply == QMessageBox.Yes
+
+    @classmethod
+    def input_dialog(cls, parent_, title_, info_, default_=''):
+        """..."""
+        _input, _reply = QInputDialog.getText(parent_, title_, info_, QLineEdit.Normal, default_)
+        return _input if _reply and (len(_input) != 0) else None
 
     @classmethod
     def console_window(cls):
