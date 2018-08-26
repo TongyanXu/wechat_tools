@@ -79,4 +79,5 @@ class GuiUtils(object):
         _vbox.addWidget(_console_text)
         _vbox.setSpacing(0)
         _console_window.setLayout(_vbox)
+        _console_window.text = _console_text
         return _console_window

@@ -6,7 +6,7 @@ By modifying configs, wechat components may perform differently
 To see detailed info of each component, please check components repository
 """
 __author__ = 'Tongyan Xu'
-__version__ = '1.2.0'
+__version__ = '1.2.1'
 
 from components import WechatComponents
 from constants import WechatComponentType, WechatDefaultConfig

@@ -1,7 +1,6 @@
 # coding=utf-8
 """..."""
 __author__ = 'Tongyan Xu'
-__version__ = '1.2.0'
 
 import sys
 from PyQt5.QtCore import QObject, QThread, Qt, pyqtSignal
@@ -179,7 +178,7 @@ class MainWindow(QMainWindow):
             event.ignore()
 
     def _clean_log(self):
-        self._console_window.clear()
+        self._console_window.text.clear()
 
 
 if __name__ == '__main__':
