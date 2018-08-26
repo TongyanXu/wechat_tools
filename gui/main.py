@@ -5,9 +5,8 @@ __author__ = 'Tongyan Xu'
 import sys
 from PyQt5.QtCore import QObject, QThread, Qt, pyqtSignal
 from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QAbstractItemView, QAction, QApplication, QCheckBox, QComboBox, QGridLayout, QHBoxLayout
-from PyQt5.QtWidgets import QLabel, QListWidget, QListWidgetItem, QMainWindow, QPushButton, QTabWidget, QTextEdit
-from PyQt5.QtWidgets import QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QAbstractItemView, QAction, QApplication, QCheckBox, QHBoxLayout, QListWidget
+from PyQt5.QtWidgets import QListWidgetItem, QMainWindow, QTabWidget, QVBoxLayout, QWidget
 from config import config
 from gui.definitions import Separator, WidgetType
 from gui.chat import ChatSetter
@@ -57,6 +56,7 @@ class MainWindow(QMainWindow):
         self._console_window = GuiUtils.console_window()
         _tab.addTab(self._info_window, 'Tools Settings')
         _tab.addTab(self._console_window, 'Console Window')
+        _tab.currentChanged.connect(self._save_tool)
         self.setCentralWidget(_tab)
 
     def _set_tool_window(self):
