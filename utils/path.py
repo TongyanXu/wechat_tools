@@ -14,8 +14,8 @@ class WechatPathManager(object):
     Can return file path needed in whole project
     Used for file & path management
     """
-    _base_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-    # _base_dir = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+    # _base_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    _base_dir = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 
     _static = 'static'
     _cache = 'cache'

@@ -23,11 +23,12 @@ class WechatLogger(object):
     def get_logger(self, stream_=True, file_=True):
         """Return a default wechat logger"""
         _default_logger = getLogger(self._name)
-        _default_logger.setLevel(self._level)
-        if stream_:
-            _default_logger.addHandler(self._gen_stream_handler())
-        if file_:
-            _default_logger.addHandler(self._gen_file_handler())
+        if not _default_logger.hasHandlers():
+            _default_logger.setLevel(self._level)
+            if stream_:
+                _default_logger.addHandler(self._gen_stream_handler())
+            if file_:
+                _default_logger.addHandler(self._gen_file_handler())
         return _default_logger
 
     def _gen_stream_handler(self):

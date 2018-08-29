@@ -6,7 +6,7 @@ By modifying configs, wechat components may perform differently
 To see detailed info of each component, please check components repository
 """
 __author__ = 'Tongyan Xu'
-__version__ = '1.2.5'
+__version__ = '1.2.6'
 
 from components import WechatComponents
 from constants import WechatComponentType, WechatDefaultConfig
@@ -63,6 +63,8 @@ class WechatTools(object):
 
     def run(self):
         """Run wechat components using configs"""
+        self._enabled_tools = []
+        self._working_components = []
         self._setup_tools()
         self._setup_bot()
 
@@ -81,6 +83,4 @@ class WechatTools(object):
         else:
             embed()
 
-        self._enabled_tools = []
-        self._working_components = []
         self._logger.info('all components are stopped.')
