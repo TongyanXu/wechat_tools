@@ -1,8 +1,9 @@
 # coding=utf-8
 """..."""
 
-from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtWidgets import QAbstractItemView, QCheckBox, QGridLayout, QListWidget, QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QAbstractItemView, QCheckBox, QHBoxLayout, QListWidget, QListWidgetItem, QPushButton, QVBoxLayout, QWidget
 from gui.utilities import GuiUtils
 
 
@@ -22,12 +23,25 @@ class ChatSetter(QWidget):
     def display_filter(self, filter_list_):
         """..."""
         self._filter.clear()
-        self._filter.addItems(filter_list_)
+        for _name in filter_list_:
+            _item = QListWidgetItem(_name)
+            _item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable)
+            self._filter.addItem(_item)
+
+    def _on_clicked(self, item_):
+        self._filter.setCurrentItem(item_)
+        for _index in range(self._filter.count()):
+            self._filter.item(_index).setBackground(QColor('white'))
+            self._filter.item(_index).setForeground(QColor('black'))
+        item_.setBackground(QColor(0, 105, 217))
+        item_.setForeground(QColor('white'))
 
     def _setup_ui(self):
         _vbox = QVBoxLayout()
         self._enable = QCheckBox(self._name)
         self._filter = QListWidget()
+        self._filter.itemClicked.connect(self._on_clicked)
+        self._filter.itemChanged.connect(self._save_filter)
         self._filter.setSelectionMode(QAbstractItemView.SingleSelection)
         _vbox.addWidget(self._enable)
         _vbox.addWidget(self._filter)
@@ -37,35 +51,22 @@ class ChatSetter(QWidget):
     def _gen_filter_btn_group(self):
         _add = QPushButton('Add')
         _add.clicked.connect(self._add_filter)
-        _edit = QPushButton('Edit')
-        _edit.clicked.connect(self._edit_filter)
         _delete = QPushButton('Delete')
         _delete.clicked.connect(self._delete_filter)
-        _save = QPushButton('Save')
-        _save.clicked.connect(self._save_filter)
 
-        _btn_group = QGridLayout()
-        _btn_group.addWidget(_add, 0, 0)
-        _btn_group.addWidget(_edit, 0, 1)
-        _btn_group.addWidget(_delete, 1, 0)
-        _btn_group.addWidget(_save, 1, 1)
+        _btn_group = QHBoxLayout()
+        _btn_group.addWidget(_add)
+        _btn_group.addWidget(_delete)
         _btn_group.setSpacing(0)
         return _btn_group
 
     def _add_filter(self):
         _name = GuiUtils.input_dialog(self, 'Filter', 'Add filter:')
         if _name:
-            self._filter.addItem(_name)
-
-    def _edit_filter(self):
-        try:
-            _item = self._filter.currentItem()
-            _name = GuiUtils.input_dialog(self, 'Filter', 'Add filter:', _item.text())
-            if _name:
-                print('!!!')
-        except Exception as e:
-            _msg = 'Choose one item before editing.'
-            print(_msg)
+            _item = QListWidgetItem(_name)
+            _item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsEditable)
+            self._filter.addItem(_item)
+            self._save_filter()
 
     def _delete_filter(self):
         try:
@@ -73,6 +74,7 @@ class ChatSetter(QWidget):
             if GuiUtils.question_dialog(self, 'Filter', 'Delete filter: ' + _item.text()):
                 _item = self._filter.takeItem(self._filter.currentRow())
                 del _item
+                self._save_filter()
         except Exception as e:
             _msg = 'Choose one item before deleting.'
             print(_msg)

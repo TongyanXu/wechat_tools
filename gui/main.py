@@ -3,6 +3,7 @@
 __author__ = 'Tongyan Xu'
 
 import sys
+from copy import deepcopy
 from PyQt5.QtCore import QObject, QThread, Qt, pyqtSignal
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QAbstractItemView, QAction, QApplication, QCheckBox, QHBoxLayout, QListWidget
@@ -25,7 +26,7 @@ class WechatThread(QObject):
 
     def run(self):
         """..."""
-        self._wechat_tool = WechatTools(config_=self._config, sub_thread_=True)
+        self._wechat_tool = WechatTools(config_=deepcopy(self._config), sub_thread_=True)
         self._wechat_tool.run()
 
     def stop(self):
