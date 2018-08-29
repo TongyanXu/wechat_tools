@@ -3,7 +3,8 @@
 
 from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QAbstractItemView, QCheckBox, QHBoxLayout, QListWidget, QListWidgetItem, QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QAbstractItemView, QCheckBox, QHBoxLayout, QListWidget, QListWidgetItem, QPushButton
+from PyQt5.QtWidgets import QVBoxLayout, QWidget
 from gui.utilities import GuiUtils
 
 
