@@ -1,11 +1,11 @@
 # coding=utf-8
 """
-Run wechat tools with configs in config.py
+Run wechat toolkit with configs in config.py
 """
 __author__ = 'Tongyan Xu'
 
 from config import config
-from main_tool import WechatTools
+from main_tool import WechatToolkit
 
 
 def main():
@@ -28,8 +28,8 @@ def main():
     WARNING: Tuling is preferred in auto-replier
              If both Tuling and XiaoI are enabled, XiaoI will be automatically ignored
     """
-    main_tool = WechatTools(config_=config)
-    main_tool.run()
+    toolkit = WechatToolkit(config_=config)
+    toolkit.run()
 
 
 if __name__ == '__main__':

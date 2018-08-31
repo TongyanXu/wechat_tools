@@ -1,6 +1,6 @@
 # coding=utf-8
 """
-Wechat Tools
+Wechat Toolkit
 This script is to setup all available wechat components
 By modifying configs, wechat components may perform differently
 To see detailed info of each component, please check components repository
@@ -25,9 +25,9 @@ tools = [{'type': WechatComponentType.RECALL_BLOCKER,
           'config': WechatDefaultConfig.AUTO_REPLIER_CONFIG}]
 
 
-class WechatTools(object):
+class WechatToolkit(object):
     """..."""
-    _name = 'wechat_tools_main'
+    _name = 'wechat_toolkit'
 
     def __init__(self, config_=None, tools_=tools, sub_thread_=False):
         self._path = WechatPathManager()

@@ -12,7 +12,7 @@ from config import config
 from gui.definitions import Separator, WidgetType
 from gui.chat import ChatSetter
 from gui.utilities import GuiUtils
-from main_tool import WechatTools, tools
+from main_tool import WechatToolkit, tools
 
 
 class WechatThread(QObject):
@@ -26,7 +26,7 @@ class WechatThread(QObject):
 
     def run(self):
         """..."""
-        self._wechat_tool = WechatTools(config_=deepcopy(self._config), sub_thread_=True)
+        self._wechat_tool = WechatToolkit(config_=deepcopy(self._config), sub_thread_=True)
         self._wechat_tool.run()
 
     def stop(self):
@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         self.show()
 
     def _setup_ui(self):
-        self.setWindowTitle('Wechat Tools')
+        self.setWindowTitle('Wechat Toolkit')
         self.setGeometry(100, 100, 600, 400)
         self._set_menu_bar()
         self._set_main_window()
